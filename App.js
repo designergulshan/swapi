@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import { StyleSheet, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Login from './src/views/Login';
+import Home from './src/views/Home'
 
 const MyRoutes = StackNavigator({
   LoginRT: {
     screen: Login
+  },
+  HomeRT: {
+    screen: Home
   }
 }, {
   initialRouteName: 'LoginRT'
@@ -14,16 +17,7 @@ const MyRoutes = StackNavigator({
 export default class App extends Component {
   render() {
     return (
-      <View style={style.container}>
-        <MyRoutes />
-      </View>
+      <MyRoutes />
     );
   }
 }
-
-const style = StyleSheet.create({
-  container: {
-    backgroundColor: '#f1f1f1',
-    flex: 1
-  }
-})
