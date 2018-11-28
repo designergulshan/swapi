@@ -9,11 +9,11 @@ export default class Home extends Component {
   }
 
   render() {
-    const user = this.props.navigation.getParam('user')
+    // const user = this.props.navigation.getParam('user')
 
     return (
       <View style={style.container}>
-        <Header user={user.name} />
+        <Header />
         <PlanetsList />
       </View>
     )

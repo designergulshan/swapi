@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, FlatList, Text, TouchableHighlight } from 'react-native';
+import Planet from './Planet'
 
 export default class PlanetsList extends Component {
   constructor(props) {
@@ -14,7 +15,6 @@ export default class PlanetsList extends Component {
     fetch('https://swapi.co/api/planets/')
       .then(res => res.json())
       .then(res => {
-        console.log(res)
         this.setState({
           planetsList: res.results,
           next: res.next
@@ -43,7 +43,7 @@ export default class PlanetsList extends Component {
       <View style={style.container}>
         <FlatList
           data={planetsList}
-          renderItem={({item}) => <Text style={style.item}>{item.name}</Text>}
+          renderItem={({item}) => <Planet planet={item} />}
         />
         <TouchableHighlight
           style={style.btnDefault}
@@ -58,12 +58,7 @@ export default class PlanetsList extends Component {
 
 const style = StyleSheet.create({
   container: {
-   flex: 1
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
+   flex: 1,
   },
   btnDefault: {
     backgroundColor: '#222',

@@ -17,8 +17,8 @@ export default class Login extends Component {
     super(props);
     this.state = {
       error: false,
-      username: '',
-      password: ''
+      username: 'luke',
+      password: '19BBY'
     }
   }
   
@@ -59,7 +59,7 @@ export default class Login extends Component {
   }
 
   render() {
-    const { error } = this.state;
+    const { error, username, password } = this.state;
 
     return (
       <ScrollView behavior='position' style={style.container}>
@@ -70,6 +70,7 @@ export default class Login extends Component {
           <TextInput
             style={style.formInput}
             selectionColor='#000'
+            value={username}
             onChangeText={this.handleUsername}
           />
         </View>
@@ -80,6 +81,7 @@ export default class Login extends Component {
             style={style.formInput}
             secureTextEntry={true}
             selectionColor='#000'
+            value={password}
             onChangeText={this.handlePassword}
           />
         </View>
