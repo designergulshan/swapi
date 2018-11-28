@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native';
 export default Headers = () => {
   return (
     <View style={style.header}>
-      <Text style={style.logo}>SWAPI</Text>
+      <Text style={style.logo}>SWAPI App</Text>
     </View>
   )
 }
