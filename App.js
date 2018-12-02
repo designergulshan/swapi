@@ -11,7 +11,7 @@ const MyRoutes = StackNavigator({
     screen: Home
   }
 }, {
-  initialRouteName: 'LoginRT'
+  initialRouteName: 'HomeRT'
 });
 
 export default class App extends Component {

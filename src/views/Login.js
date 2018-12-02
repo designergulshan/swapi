@@ -5,7 +5,8 @@ import {
   View,
   Text,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  StatusBar
 } from 'react-native';
 
 export default class Login extends Component {
@@ -38,6 +39,8 @@ export default class Login extends Component {
     const { username, password } = this.state;
     const { navigate } = this.props.navigation;
 
+    console.log('requestLogin')
+
     if(username !== '' && password !== '') {
       fetch(`https://swapi.co/api/people/?search=${username}`)
         .then(res => res.json())
@@ -62,26 +65,34 @@ export default class Login extends Component {
     const { error, username, password } = this.state;
 
     return (
-      <ScrollView behavior='position' style={style.container}>
-        <Text style={style.heading2}>User Login</Text>
+      <ScrollView keyboardShouldPersistTaps={'handled'} behavior='position' style={style.container}>
+        
+        <StatusBar backgroundColor="#f1f1f1" barStyle="dark-content" />
+        
+        <View style={style.labelContainer}>
+          <Text style={style.logo}>Star wars</Text>
+          <Text style={style.label}>The war of space has begin now...</Text>
+        </View>
 
         <View style={style.formRow}>
-          <Text style={style.formLabel}>Username:</Text>
+          {/* <Text style={style.formLabel}>Username:</Text> */}
           <TextInput
             style={style.formInput}
             selectionColor='#000'
             value={username}
+            placeholder='Username'
             onChangeText={this.handleUsername}
-          />
+            />
         </View>
         
         <View style={style.formRow}>
-          <Text style={style.formLabel}>Password:</Text>
+          {/* <Text style={style.formLabel}>Password:</Text> */}
           <TextInput
             style={style.formInput}
             secureTextEntry={true}
             selectionColor='#000'
             value={password}
+            placeholder='password'
             onChangeText={this.handlePassword}
           />
         </View>
@@ -95,11 +106,17 @@ export default class Login extends Component {
           </TouchableHighlight>
         </View>
 
-        {error && <Text style={style.error}>{error}</Text>}
+        <View style={style.errorView}>
+          {error && <Text style={style.error}>{error}</Text>}
+        </View>
       </ScrollView>
     )
   }
 }
+
+const theme = {
+  color: '#000'
+};
 
 const style = StyleSheet.create({
   container: {
@@ -107,40 +124,51 @@ const style = StyleSheet.create({
     flex: 1,
     padding: 20
   },
-  heading2: {
-    fontSize: 22,
+  labelContainer: {
+    marginBottom: 80,
+    marginTop: 20,
+  },
+  logo: {
+    fontSize: 40,
+    color: theme.color,
+    fontWeight: '900'
+  },
+  label: {
+    fontSize: 18,
+    color: '#000',
+    opacity: 0.4,
     fontWeight: '100',
     fontFamily: 'sans-serif-light',
-    marginBottom: 50,
-    textAlign: 'center'
   },
   formRow: {
     marginBottom: 20
   },
   formLabel: {
+    color: theme.color,
+    marginBottom: 5,
     fontWeight: 'bold',
-    marginBottom: 5
   },
   formInput: {
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 20,
+    height: 40,
     padding: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    height: 40
+    color: '#000',
+    borderBottomWidth: 2,
+    borderBottomColor: theme.color,
   },
   formButton: {
-    backgroundColor: '#222',
-    borderRadius: 20,
+    height: 40,
     padding: 10,
-    height: 40
+    backgroundColor: theme.color,
   },
   formButtonText: {
     color: '#fff',
+    fontWeight: 'bold',
     textAlign: 'center'
   },
   error: {
     color: '#ff4444'
+  },
+  errorView: {
+    marginBottom: 30
   }
 })

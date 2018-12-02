@@ -1,14 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { getDate } from '../../utilities'
 
 export default Planet = ({ planet }) => {
+  
+  console.log(planet)
   return (
     <View style={style.container}>
-      <Text style={style.heading2}>{planet.name}</Text>
-      <Text>Since: {getDate(planet.created)}</Text>
+      <Text style={style.nameLabel}>{planet.name}</Text>
       <Text>Gravity: {planet.gravity}</Text>
-      <Text>gravity: {planet.gravity}</Text>
       <Text>Orbital Period: {planet.orbital_period}</Text>
       <Text>Population: {planet.population}</Text>
       <View style={style.cardFooter}>
@@ -20,7 +19,15 @@ export default Planet = ({ planet }) => {
   )
 }
 
+
 const style = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    margin: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    borderWidth: 1
+  },
   item: {
     padding: 10,
     fontSize: 18,
@@ -28,33 +35,17 @@ const style = StyleSheet.create({
   cardFooter: {
     backgroundColor: '#ddd',
     flexDirection: 'row',
-    margin: -10,
     marginTop: 10,
     padding: 10,
-    borderBottomEndRadius: 4,
-    borderBottomLeftRadius: 4 
   },
   footerItem: {
     flex: 1,
     textAlign: 'center'
   },
-  container: {
-    padding: 10,
-    backgroundColor: '#fff',
-    borderBottomColor: '#000',
-    margin: 5,
-    marginLeft: 10,
-    marginRight: 10,
-    elevation: 2,
-    shadowOpacity: 1.0,
-    shadowColor: '#000',
-    borderRadius: 4,
-    shadowOffset: { width: 0, height: 2 }
-  },
-  heading2: {
-    fontSize: 18,
-    fontWeight: '400',
-    fontFamily: 'sans-serif-light',
+  nameLabel: {
+    fontSize: 16,
+    color: '#000',
     marginBottom: 10,
+    fontWeight: '200',
   }
 })
