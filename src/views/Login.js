@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
   StatusBar
 } from 'react-native';
+import { config } from '../config'
 
 export default class Login extends Component {
   static navigationOptions = {
@@ -42,7 +43,7 @@ export default class Login extends Component {
     console.log('requestLogin')
 
     if(username !== '' && password !== '') {
-      fetch(`https://swapi.co/api/people/?search=${username}`)
+      fetch(`${config.baseUrl}/people/?search=${username}`)
         .then(res => res.json())
         .then(res => {
           console.log(res.results[0])

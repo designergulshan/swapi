@@ -1,19 +1,18 @@
 import React from 'react';
-import { StyleSheet, View, FlatList, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import Planet from './Planet'
 
 export default PlanetsList = props => {
   _keyExtractor = item => item.name
   
-  const { planetsList } = props;
+  const { planetsList, navigate } = props;
 
-  console.log(planetsList)
   return (
     <View style={style.container}>
       { planetsList && <FlatList
         data={planetsList}
         keyExtractor={this._keyExtractor}
-        renderItem={({item}) => <Planet planet={item} />}
+        renderItem={({item}) => <Planet planet={item} navigate={navigate} />}
       /> }
     </View>
   )

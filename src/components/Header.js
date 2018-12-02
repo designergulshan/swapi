@@ -8,30 +8,41 @@ import {
 } from 'react-native';
 
 export default class Headers extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state={
+      query: ''      
+    }
+  }
+
+  handleSearchInput = text => {
+    this.setState({
+      query: text
+    })
+  }
+  
+  searchView = () => {
+    const { query } = this.state;
+    this.props.navigation.navigate('SearchViewRT', { query })
+  }
+
   render() {
-    const {
-      query,
-      handleSearchInput,
-      findPlanet,
-      getAllPlanets,
-      isSearched
-    } = this.props;
+    const { query, navigation, isBackRequire } = this.props;
 
     return (
       <View style={style.header}>
-  
-        {isSearched && <TouchableOpacity style={style.backBtn} onPress={getAllPlanets}>
+        {isBackRequire ? <TouchableOpacity style={style.backBtn} onPress={() => navigation.goBack()}>
           <Image style={style.backBtnIcon} source={require('../images/left-arrow-angle.png')}/>
-        </TouchableOpacity>}
-
-        <TextInput
+        </TouchableOpacity> : <TextInput
           style={style.searchInput}
           placeholderTextColor='#999'
           placeholder='Search...'
           value={query}
-          onChangeText={handleSearchInput}
-          onSubmitEditing={findPlanet}
-        />
+          navigate={navigation.navigate}
+          onChangeText={this.handleSearchInput}
+          onSubmitEditing={this.searchView}
+        />}
 
         <Image
           style={style.userIcon}
@@ -49,6 +60,7 @@ const style = StyleSheet.create({
     shadowColor: '#000',
     flexDirection: 'row',
     backgroundColor: '#fff',
+    height: 50,
     shadowOffset: { width: 2, height: 2 }
   },
   searchInput: {
@@ -73,7 +85,8 @@ const style = StyleSheet.create({
     marginTop: 10,
     marginRight: 10,
     borderColor: '#000',
-    borderRadius: 16
+    borderRadius: 16,
+    alignItems: 'flex-end'
   },
   burgerIcon: {
     width: 32,

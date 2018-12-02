@@ -15,9 +15,7 @@ export default class Home extends Component {
     super(props);
     this.state = {
       planetsList: [],
-      loader: true,
-      query: '',
-      isSearched: false
+      loader: true
     }
   }
 
@@ -33,7 +31,7 @@ export default class Home extends Component {
     if(config.mock) {
       this.setPlanets(mockData)
     } else {
-      fetch('https://swapi.co/api/planets/')
+      fetch(`${config.baseUrl}/planets/`)
         .then(res => res.json())
         .then(res => {
           this.setPlanets(res)
@@ -44,37 +42,14 @@ export default class Home extends Component {
   setPlanets = res => {
     this.setState({
       loader: false,
-      isSearched: false,
       planetsList: res.results
     })
   }
 
-  handleSearchInput = text => {
-    this.setState({
-      query: text
-    })
-  }
-
-  findPlanet = () => {
-    this.setState({
-      loader: true,
-    })
-    
-    fetch(`https://swapi.co/api/planets?search=${this.state.query}`)
-    .then(res => res.json())
-    .then(res => {
-      this.setState({
-        planetsList: res.results,
-        loader: false,
-        query: '',
-        isSearched: true
-        })
-      })
-  }
-
   render() {
-    // const user = this.props.navigation.getParam('user')
-    const { planetsList, loader, query, isSearched } = this.state;
+    const { navigate } = this.props.navigation
+    const { navigation } = this.props;
+    const { planetsList, loader, query } = this.state;
 
     return (
       <View style={style.container}>
@@ -86,15 +61,17 @@ export default class Home extends Component {
         
         <Header
           query={query}
-          handleSearchInput={this.handleSearchInput}
           findPlanet={this.findPlanet}
           getAllPlanets={this.getAllPlanets}
-          isSearched={isSearched}
+          navigation={navigation}
         />
         
         {loader && <Loader />}
 
-        <PlanetsList planetsList={planetsList} />
+        <PlanetsList
+          planetsList={planetsList}
+          navigate={navigate}
+        />
       </View>
     )
   }
