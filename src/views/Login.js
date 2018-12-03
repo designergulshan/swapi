@@ -6,7 +6,9 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  StatusBar
+  StatusBar,
+  AsyncStorage,
+  Alert
 } from 'react-native';
 import { config } from '../config'
 
@@ -19,8 +21,10 @@ export default class Login extends Component {
     super(props);
     this.state = {
       error: false,
-      username: 'luke',
-      password: '19BBY'
+      username: '',
+      password: ''
+      // username: 'luke',
+      // password: '19BBY'
     }
   }
   
@@ -36,19 +40,32 @@ export default class Login extends Component {
     })
   }
 
-  requestLogin = () => {
-    const { username, password } = this.state;
+  loggedInCheck = user => {
     const { navigate } = this.props.navigation;
 
-    console.log('requestLogin')
+    AsyncStorage.getItem('user', (err, result) => {
+      if (result === null || result === 'null') {
+        this.setState({
+          error: false,
+          username: '',
+          password: ''
+        })
+
+        AsyncStorage.setItem('user', user.name)
+        navigate('HomeRT', {user})
+      }
+    })
+  }
+
+  requestLogin = () => {
+    const { username, password } = this.state;
 
     if(username !== '' && password !== '') {
       fetch(`${config.baseUrl}/people/?search=${username}`)
         .then(res => res.json())
         .then(res => {
-          console.log(res.results[0])
-          if (res.results.length > 0 && password === res.results[0].birth_year) {
-            navigate('HomeRT', {user: res.results[0]})
+          if (res.results.length > 0 && password.toLocaleLowerCase() === res.results[0].birth_year.toLocaleLowerCase()) {
+            this.loggedInCheck(res.results[0])
           } else {
             this.setState({
               error: "Credentials doesn't match. Please try again."
@@ -60,6 +77,15 @@ export default class Login extends Component {
         error: 'username/password field shouldn\'t be blank.'
       })
     }
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('user', (err, result) => {
+      console.log('result', result, result !== 'null');
+      if (result !== 'null') {
+        this.props.navigation.navigate('HomeRT')
+      }
+    })
   }
 
   render() {

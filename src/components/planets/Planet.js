@@ -3,27 +3,27 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  Image
+  TouchableOpacity
 } from 'react-native';
 
 export default class Planet extends Component {
-  planetDetails = () => {
-    this.props.navigate('PlanetDetailsTR', { name: this.props.planet.name})
+  planetDetails = color => {
+    this.props.navigate('PlanetDetailsTR', { name: this.props.planet.name, color})
   }
   
   render() {
-    const { planet } = this.props;
-    const randomColor = Math.floor(Math.random()*16777215).toString(16);
+    const { planet, index } = this.props;
+    let randomColor = Math.floor(Math.random()*16777215).toString(16);
+    if(randomColor.length < 6) {
+      randomColor = Math.floor(Math.random()*16777215).toString(16);
+    }
+    console.log(randomColor)
+    const cardStyle = index === 0 ? [{marginTop: 30}, style.card] : style.card
 
     return (
-      <TouchableOpacity activeOpacity={1} onPress={this.planetDetails}>
-        <View style={style.card}>
-          <Image
-            style={style.planetImage}
-            // source={{uri: `https://via.placeholder.com/318x200/${randomColor}/${randomColor}`}}
-            source={{uri: `https://via.placeholder.com/318x200/000/000`}}
-          />
+      <TouchableOpacity activeOpacity={1} onPress={() => this.planetDetails(randomColor)}>
+        <View style={[{borderColor: `#${randomColor}`}, cardStyle]}>
+          <View style={[{backgroundColor: `#${randomColor}`}, style.planetImage]} />
           <Text style={style.nameLabel}>{planet.name}</Text>
 
           <Text>Gravity: {planet.gravity}</Text>
@@ -45,22 +45,23 @@ const style = StyleSheet.create({
     margin: 5,
     padding: 10,
     elevation: 2,
-    borderWidth: 1,
+    borderWidth: 2,
     marginLeft: 10,
     marginRight: 10,
+    marginBottom: 20,
     shadowRadius: 2,
     borderRadius: 2,
     shadowColor: '#000',
-    borderColor: '#ddd',
-    borderBottomWidth: 0,
     backgroundColor: '#fff',
   },
   planetImage: {
     flex: 1,
     width: 318,
     height: 200,
+    elevation: 10,
+    marginTop: -25,
     borderRadius: 2,
-    marginBottom: 10
+    marginBottom: 10,
   },
   item: {
     padding: 10,

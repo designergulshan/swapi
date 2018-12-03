@@ -47,7 +47,6 @@ export default class Home extends Component {
   }
 
   render() {
-    const { navigate } = this.props.navigation
     const { navigation } = this.props;
     const { planetsList, loader, query } = this.state;
 
@@ -70,7 +69,7 @@ export default class Home extends Component {
 
         <PlanetsList
           planetsList={planetsList}
-          navigate={navigate}
+          navigate={navigation.navigate}
         />
       </View>
     )

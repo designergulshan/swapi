@@ -23,34 +23,30 @@ export default class PlanetDetails extends Component {
   componentDidMount() {
     const { navigation } = this.props;
     const name = navigation.getParam('name');
-
+    
     this.setState({
       planet: null
     })
-
+    
     fetch(`${config.baseUrl}/planets?search=${name}`)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          planet: res.results[0]
-        })
+    .then(res => res.json())
+    .then(res => {
+      this.setState({
+        planet: res.results[0]
       })
+    })
   }
-
+  
   render() {
     const { planet } = this.state;
-
+    const { navigation } = this.props;
+    const color = navigation.getParam('color');
+    
     return(
       <View>
+        <View style={[{backgroundColor: `#${color}`}, style.planetImage]} />
         {planet !== null && (
-          <>
-            <Image
-              style={style.planetImage}
-              // source={{uri: `https://via.placeholder.com/318x200/${randomColor}/${randomColor}`}}
-              source={{uri: `https://via.placeholder.com/318x200/000/000`}}
-            />
-            <Text style={style.nameLabel}>{planet.name}</Text>
-
+          <View style={style.detailsPane}>
             <Text>Gravity: {planet.gravity}</Text>
             <Text>Orbital Period: {planet.orbital_period}</Text>
             <Text>Population: {planet.population}</Text>
@@ -59,7 +55,7 @@ export default class PlanetDetails extends Component {
               <Text style={style.footerItem}>{planet.diameter}</Text>
               <Text style={style.footerItem}>{planet.orbital_period}</Text>
             </View>
-          </>
+          </View>
         )}
       </View>
     )
@@ -81,10 +77,12 @@ const style = StyleSheet.create({
     borderColor: '#ddd',
     borderBottomWidth: 0,
   },
+  detailsPane: {
+    padding: 10
+  },
   planetImage: {
-    width: 318,
-    height: 200,
-    marginBottom: 10
+    width: '100%',
+    height: 200
   },
   item: {
     padding: 10,

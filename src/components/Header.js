@@ -26,6 +26,10 @@ export default class Headers extends Component {
     const { query } = this.state;
     this.props.navigation.navigate('SearchViewRT', { query })
   }
+  
+  userProfile = () => {
+    this.props.navigation.navigate('ProfileRT')
+  }
 
   render() {
     const { query, navigation, isBackRequire } = this.props;
@@ -44,10 +48,12 @@ export default class Headers extends Component {
           onSubmitEditing={this.searchView}
         />}
 
-        <Image
-          style={style.userIcon}
-          source={{uri: 'https://cdn.dribbble.com/users/458522/screenshots/4568564/kratos_1.jpg'}}
+        <TouchableOpacity onPress={this.userProfile}>
+          <Image
+            style={style.userIcon}
+            source={{uri: 'https://cdn.dribbble.com/users/458522/screenshots/4568564/kratos_1.jpg'}}
           />
+        </TouchableOpacity>
       </View>
     )
   }

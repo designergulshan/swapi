@@ -4,6 +4,7 @@ import Login from './src/views/Login';
 import Home from './src/views/Home';
 import PlanetDetails from './src/views/PlanetDetails';
 import SearchView from './src/views/SearchView';
+import Profile from './src/views/Profile';
 
 const MyRoutes = StackNavigator({
   LoginRT: {
@@ -17,6 +18,9 @@ const MyRoutes = StackNavigator({
   },
   HomeRT: {
     screen: Home
+  },
+  ProfileRT: {
+    screen: Profile
   }
 }, {
   initialRouteName: 'LoginRT'

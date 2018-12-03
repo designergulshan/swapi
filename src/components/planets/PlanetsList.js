@@ -9,10 +9,10 @@ export default PlanetsList = props => {
 
   return (
     <View style={style.container}>
-      { planetsList && <FlatList
+      { planetsList.length > 0 && <FlatList
         data={planetsList}
         keyExtractor={this._keyExtractor}
-        renderItem={({item}) => <Planet planet={item} navigate={navigate} />}
+        renderItem={({item, index}) => <Planet index={index} planet={item} navigate={navigate} />}
       /> }
     </View>
   )
