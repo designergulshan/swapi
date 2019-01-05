@@ -7,9 +7,9 @@ import {
   TextInput,
   TouchableHighlight,
   StatusBar,
-  AsyncStorage,
-  Alert
+  AsyncStorage
 } from 'react-native';
+import Loader from '../components/Loader'
 import { config } from '../config'
 
 export default class Login extends Component {
@@ -21,10 +21,11 @@ export default class Login extends Component {
     super(props);
     this.state = {
       error: false,
-      username: '',
-      password: ''
-      // username: 'luke',
-      // password: '19BBY'
+      // username: '',
+      // password: ''
+      username: 'luke',
+      password: '19BBY',
+      isLoading: false
     }
   }
   
@@ -57,13 +58,27 @@ export default class Login extends Component {
     })
   }
 
+  enableLoader = () => {
+    this.setState({
+      isLoading: true
+    })
+  }
+
+  disableLoader = () => {
+    this.setState({
+      isLoading: false
+    })
+  }
+
   requestLogin = () => {
     const { username, password } = this.state;
 
     if(username !== '' && password !== '') {
+      this.enableLoader()
       fetch(`${config.baseUrl}/people/?search=${username}`)
         .then(res => res.json())
         .then(res => {
+          this.disableLoader()
           if (res.results.length > 0 && password.toLocaleLowerCase() === res.results[0].birth_year.toLocaleLowerCase()) {
             this.loggedInCheck(res.results[0])
           } else {
@@ -73,6 +88,7 @@ export default class Login extends Component {
           }
         })
     } else {
+      this.disableLoader()
       this.setState({
         error: 'username/password field shouldn\'t be blank.'
       })
@@ -81,7 +97,6 @@ export default class Login extends Component {
 
   componentDidMount() {
     AsyncStorage.getItem('user', (err, result) => {
-      console.log('result', result, result !== 'null');
       if (result !== 'null') {
         this.props.navigation.navigate('HomeRT')
       }
@@ -89,54 +104,57 @@ export default class Login extends Component {
   }
 
   render() {
-    const { error, username, password } = this.state;
+    const { error, username, password, isLoading } = this.state;
 
     return (
-      <ScrollView keyboardShouldPersistTaps={'handled'} behavior='position' style={style.container}>
-        
-        <StatusBar backgroundColor="#f1f1f1" barStyle="dark-content" />
-        
-        <View style={style.labelContainer}>
-          <Text style={style.logo}>Star wars</Text>
-          <Text style={style.label}>The war of space has begin now...</Text>
-        </View>
+      <View style={style.container}>
+        {isLoading && <Loader />}
 
-        <View style={style.formRow}>
-          {/* <Text style={style.formLabel}>Username:</Text> */}
-          <TextInput
-            style={style.formInput}
-            selectionColor='#000'
-            value={username}
-            placeholder='Username'
-            onChangeText={this.handleUsername}
+        <ScrollView keyboardShouldPersistTaps={'handled'} behavior='position'>
+          <StatusBar backgroundColor="#f1f1f1" barStyle="dark-content" />
+          
+          <View style={style.labelContainer}>
+            <Text style={style.logo}>Star wars</Text>
+            <Text style={style.label}>The war of space has begin now...</Text>
+          </View>
+
+          <View style={style.formRow}>
+            {/* <Text style={style.formLabel}>Username:</Text> */}
+            <TextInput
+              style={style.formInput}
+              selectionColor='#000'
+              value={username}
+              placeholder='Username'
+              onChangeText={this.handleUsername}
+              />
+          </View>
+          
+          <View style={style.formRow}>
+            {/* <Text style={style.formLabel}>Password:</Text> */}
+            <TextInput
+              style={style.formInput}
+              secureTextEntry={true}
+              selectionColor='#000'
+              value={password}
+              placeholder='password'
+              onChangeText={this.handlePassword}
             />
-        </View>
-        
-        <View style={style.formRow}>
-          {/* <Text style={style.formLabel}>Password:</Text> */}
-          <TextInput
-            style={style.formInput}
-            secureTextEntry={true}
-            selectionColor='#000'
-            value={password}
-            placeholder='password'
-            onChangeText={this.handlePassword}
-          />
-        </View>
+          </View>
 
-        <View style={style.formRow}>
-          <TouchableHighlight
-            style={style.formButton}
-            onPress={this.requestLogin}
-          >
-            <Text style={style.formButtonText}>Login</Text>
-          </TouchableHighlight>
-        </View>
+          <View style={style.formRow}>
+            <TouchableHighlight
+              style={style.formButton}
+              onPress={this.requestLogin}
+            >
+              <Text style={style.formButtonText}>Login</Text>
+            </TouchableHighlight>
+          </View>
 
-        <View style={style.errorView}>
-          {error && <Text style={style.error}>{error}</Text>}
-        </View>
-      </ScrollView>
+          <View style={style.errorView}>
+            {error && <Text style={style.error}>{error}</Text>}
+          </View>
+        </ScrollView>
+      </View>
     )
   }
 }

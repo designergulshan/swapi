@@ -3,7 +3,6 @@ import { StackNavigator } from 'react-navigation';
 import Login from './src/views/Login';
 import Home from './src/views/Home';
 import PlanetDetails from './src/views/PlanetDetails';
-import SearchView from './src/views/SearchView';
 import Profile from './src/views/Profile';
 
 const MyRoutes = StackNavigator({
@@ -12,9 +11,6 @@ const MyRoutes = StackNavigator({
   },
   PlanetDetailsTR: {
     screen: PlanetDetails
-  },
-  SearchViewRT: {
-    screen: SearchView
   },
   HomeRT: {
     screen: Home

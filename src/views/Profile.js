@@ -4,13 +4,14 @@ import { View,
   Image,
   StyleSheet,
   TouchableOpacity,
-  AsyncStorage,
-  Alert
+  AsyncStorage
 } from 'react-native';
 
 export default class Profile extends Component {
-  static navigationOptions = {
-    header: null
+  static navigationOptions = () => {
+    return {
+      title: 'Profile'
+    }
   }
   
   constructor(props) {

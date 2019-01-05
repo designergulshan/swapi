@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { View,
   Text,
   StyleSheet,
-  Image
+  Image,
+  BackHandler
 } from 'react-native';
 import { config } from '../config';
 
@@ -39,12 +40,15 @@ export default class PlanetDetails extends Component {
   
   render() {
     const { planet } = this.state;
-    const { navigation } = this.props;
-    const color = navigation.getParam('color');
     
     return(
       <View>
-        <View style={[{backgroundColor: `#${color}`}, style.planetImage]} />
+        <View style={style.planetImageContainer}>
+          <Image
+            style={style.planetImage}
+            source={{uri: 'https://cdn.dribbble.com/users/1358412/screenshots/3221153/fantastic_planet_001.jpg'}}
+          />
+        </View>
         {planet !== null && (
           <View style={style.detailsPane}>
             <Text>Gravity: {planet.gravity}</Text>
@@ -79,6 +83,11 @@ const style = StyleSheet.create({
   },
   detailsPane: {
     padding: 10
+  },
+  planetImageContainer: {
+    width: '100%',
+    height: 200,
+    backgroundColor: '#000'
   },
   planetImage: {
     width: '100%',

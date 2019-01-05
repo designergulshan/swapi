@@ -1,4 +1,4 @@
 export const config = {
-  mock: true,
+  mock: false,
   baseUrl: 'https://swapi.co/api'
 }

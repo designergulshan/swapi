@@ -4,35 +4,17 @@ import {
   View,
   TextInput,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Text
 } from 'react-native';
 
 export default class Headers extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state={
-      query: ''      
-    }
-  }
-
-  handleSearchInput = text => {
-    this.setState({
-      query: text
-    })
-  }
-  
-  searchView = () => {
-    const { query } = this.state;
-    this.props.navigation.navigate('SearchViewRT', { query })
-  }
-  
   userProfile = () => {
     this.props.navigation.navigate('ProfileRT')
   }
 
   render() {
-    const { query, navigation, isBackRequire } = this.props;
+    const { query, navigation, isBackRequire, handleSearchInput, clearQuery } = this.props;
 
     return (
       <View style={style.header}>
@@ -44,9 +26,12 @@ export default class Headers extends Component {
           placeholder='Search...'
           value={query}
           navigate={navigation.navigate}
-          onChangeText={this.handleSearchInput}
-          onSubmitEditing={this.searchView}
+          onChangeText={ text => handleSearchInput(text) }
         />}
+
+        {query !== '' && <TouchableOpacity style={style.clearSearch} onPress={clearQuery}>
+          <Text style={style.clearSearchText}>&times;</Text>
+        </TouchableOpacity>}
 
         <TouchableOpacity onPress={this.userProfile}>
           <Image
@@ -68,6 +53,25 @@ const style = StyleSheet.create({
     backgroundColor: '#fff',
     height: 50,
     shadowOffset: { width: 2, height: 2 }
+  },
+  clearSearch: {
+    flex: 1,
+    top: 16,
+    width: 20,
+    right: 60,
+    height: 20,
+    elevation: 1,
+    borderWidth: 1,
+    borderRadius: 10,
+    textAlign: 'center',
+    position: 'absolute',
+    borderColor: '#ddd',
+    backgroundColor: '#fff',
+    textAlignVertical: 'center'
+  },
+  clearSearchText: {
+    textAlign: 'center',
+    fontSize: 12
   },
   searchInput: {
     borderRadius: 2,

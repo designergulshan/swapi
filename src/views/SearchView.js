@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { config } from '../config';
-import Planet from '../components/planets/Planet'
 import Header from '../components/Header'
-import PlanetList from '../components/planets/PlanetsList'
+import PlanetsList from '../components/planets/PlanetsList'
 
 export default class SearchView extends Component {
   static navigationOptions = {
@@ -27,7 +26,6 @@ export default class SearchView extends Component {
     fetch(`${config.baseUrl}/planets?search=${query}`)
     .then(res => res.json())
     .then(res => {
-      console.log
       this.setState({
           planetsList: res.results,
           // disable loader
