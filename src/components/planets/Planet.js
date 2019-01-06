@@ -57,7 +57,7 @@ const style = StyleSheet.create({
   },
   planetImageContainer: {
     flex: 1,
-    width: 317,
+    width: '100%',
     height: 200,
     elevation: 10,
     marginTop: -25,
@@ -66,7 +66,7 @@ const style = StyleSheet.create({
     backgroundColor: '#1c1348'
   },
   planetImage: {
-    width: 317,
+    width: '100%',
     height: 200,
     borderRadius: 2
   },

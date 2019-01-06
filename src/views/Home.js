@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, StatusBar, BackHandler } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  BackHandler,
+  AsyncStorage,
+  Alert
+} from 'react-native';
 import Header from '../components/Header';
 import PlanetsList from '../components/planets/PlanetsList';
 import Loader from '../components/Loader';
@@ -21,14 +28,19 @@ export default class Home extends Component {
       isLoadingMore: false,
       highestPopulation: null,
       nextUrl: null,
-      query: ''
+      query: '',
+      searchCount: 0,
+      name: '',
+      loginTime: new Date()
     }
   }
 
-  findHighestPopulation = results => {
+  findHighestPopulation = () => {
+    const results = this.state.fullPlanetsList;
+
     if(results.length > 0 && results[0].population !== 'unknown') {
       const maxPopulation = Math.max.apply(Math, results.map( o => o.population !== 'unknown' && o.population))
-  
+      
       for (let i = 0; i <= results.length; i++) {
         if(results[i].population == maxPopulation) {
           this.setState({
@@ -48,7 +60,7 @@ export default class Home extends Component {
         .then(res => res.json())
         .then(res => {
           this.setPlanets(res)
-        })
+        }, this.findHighestPopulation())
     }
   }
 
@@ -65,13 +77,57 @@ export default class Home extends Component {
           .then(res => res.json())
           .then(res => {
             this.setPlanets(res)
-          })
+          }, this.findHighestPopulation())
       }, 500)
     } else {
       this.setState({
         isLoadingMore: false
-      })
+      }, this.findHighestPopulation())
     }
+  }
+
+  isExceeded = () => {
+    const { loginTime } = this.state;
+    const currentTime = new Date();
+    const diffMs = (currentTime - loginTime);
+    return Math.round(((diffMs % 86400000) % 3600000) / 60000);
+  }
+
+  requestSearch =_.debounce(() => {
+    const { query, searchCount, name } = this.state;
+
+    if(searchCount > 4 && name !== 'Luke Skywalker' && this.isExceeded() > 0) {
+      Alert.alert('Your search limit is exceeded');
+      this.setState(prevState => ({
+        planetsList: prevState.fullPlanetsList
+      }))
+    } else {
+      this.setState({
+        isLoading: true
+      })
+      fetch(`${config.baseUrl}/planets/?search=${query}`)
+      .then(res => res.json())
+      .then(res => {
+        this.setState(prevState => ({
+            isLoading: false,
+            planetsList: res.results,
+            searchCount: query !== '' ? prevState.searchCount+1 : prevState.searchCount
+          }), this.findHighestPopulation())
+        })
+    }
+  }, 10)
+
+  handleSearchInput = query => {
+    this.setState({
+      query
+    }, this.requestSearch())
+  }
+
+  clearQuery = () => {
+    this.setState(prevState => ({
+      query: '',
+      planetsList: prevState.fullPlanetsList
+    }))
   }
 
   setPlanets = res => {
@@ -81,32 +137,14 @@ export default class Home extends Component {
       planetsList: [...prevState.planetsList, ...res.results],
       fullPlanetsList: [...prevState.planetsList, ...res.results],
       nextUrl: res.next
-    }), () => {
-      this.findHighestPopulation([...this.state.planetsList, ...res.results]);
-    })
+    }), this.findHighestPopulation())
   }
 
-  handleSearchInput = query => {
-    const { fullPlanetsList } = this.state;
-
-    const filterdQuery = query.toLowerCase();
-    const filteredList = fullPlanetsList.filter( item => item.name.toLowerCase().search(filterdQuery) !== -1 && item);
-    this.setState({
-      planetsList: filteredList,
-      query
-    }, () => {
-      this.findHighestPopulation(this.state.planetsList);
-    })
-  }
-
-  clearQuery = () => {
-    const { fullPlanetsList } = this.state;
-    
-    this.setState({
-      query: '',
-      planetsList: fullPlanetsList
-    }, () => {
-      this.findHighestPopulation(this.state.planetsList);
+  getUserInfo = () => {
+    AsyncStorage.getItem('user', (err, result) => {
+      this.setState({
+        name: result
+      })
     })
   }
   
@@ -115,6 +153,8 @@ export default class Home extends Component {
     
     // disable login screen redirection
     BackHandler.addEventListener('hardwareBackPress', () => true)
+
+    this.getUserInfo()
   }
 
   render() {

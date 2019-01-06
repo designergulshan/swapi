@@ -13,7 +13,6 @@ export default Loader = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    // top: 52,
     top: 0,
     left: 0,
     right: 0,

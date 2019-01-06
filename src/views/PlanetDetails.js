@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { View,
   Text,
   StyleSheet,
-  Image,
-  BackHandler
+  Image
 } from 'react-native';
 import { config } from '../config';
+import Loader from '../components/Loader';
 
 export default class PlanetDetails extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -30,11 +30,11 @@ export default class PlanetDetails extends Component {
     })
     
     fetch(`${config.baseUrl}/planets?search=${name}`)
-    .then(res => res.json())
-    .then(res => {
-      this.setState({
-        planet: res.results[0]
-      })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          planet: res.results[0]
+        })
     })
   }
   
@@ -43,6 +43,7 @@ export default class PlanetDetails extends Component {
     
     return(
       <View>
+        {planet === null && <Loader />}
         <View style={style.planetImageContainer}>
           <Image
             style={style.planetImage}
