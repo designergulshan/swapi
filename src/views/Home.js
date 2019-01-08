@@ -35,18 +35,13 @@ export default class Home extends Component {
     }
   }
 
-  findHighestPopulation = () => {
-    const results = this.state.fullPlanetsList;
-
-    if(results.length > 0 && results[0].population !== 'unknown') {
+  findHighestPopulation = results => {
+    if(results.length > 0) {
       const maxPopulation = Math.max.apply(Math, results.map( o => o.population !== 'unknown' && o.population))
       
       for (let i = 0; i <= results.length; i++) {
         if(results[i].population == maxPopulation) {
-          this.setState({
-            highestPopulation: i
-          })
-          break;
+          return i;
         }
       }
     }
@@ -60,7 +55,7 @@ export default class Home extends Component {
         .then(res => res.json())
         .then(res => {
           this.setPlanets(res)
-        }, this.findHighestPopulation())
+        })
     }
   }
 
@@ -77,12 +72,12 @@ export default class Home extends Component {
           .then(res => res.json())
           .then(res => {
             this.setPlanets(res)
-          }, this.findHighestPopulation())
+          })
       }, 500)
     } else {
       this.setState({
         isLoadingMore: false
-      }, this.findHighestPopulation())
+      })
     }
   }
 
@@ -108,11 +103,16 @@ export default class Home extends Component {
       fetch(`${config.baseUrl}/planets/?search=${query}`)
       .then(res => res.json())
       .then(res => {
-        this.setState(prevState => ({
-            isLoading: false,
-            planetsList: res.results,
-            searchCount: query !== '' ? prevState.searchCount+1 : prevState.searchCount
-          }), this.findHighestPopulation())
+        this.setState(prevState => {
+            const highestPopulation = this.findHighestPopulation(res.results)
+
+            return {
+              isLoading: false,
+              highestPopulation,
+              planetsList: res.results,
+              searchCount: query !== '' ? prevState.searchCount+1 : prevState.searchCount
+            }
+          })
         })
     }
   }, 10)
@@ -124,20 +124,31 @@ export default class Home extends Component {
   }
 
   clearQuery = () => {
-    this.setState(prevState => ({
-      query: '',
-      planetsList: prevState.fullPlanetsList
-    }))
+    this.setState(prevState => {
+      const highestPopulation = this.findHighestPopulation(prevState.fullPlanetsList);
+      
+      return {
+        query: '',
+        highestPopulation,
+        planetsList: prevState.fullPlanetsList
+      }
+    })
   }
 
   setPlanets = res => {
-    this.setState(prevState => ({
-      isLoading: false,
-      isLoadingMore: false,
-      planetsList: [...prevState.planetsList, ...res.results],
-      fullPlanetsList: [...prevState.planetsList, ...res.results],
-      nextUrl: res.next
-    }), this.findHighestPopulation())
+    this.setState(prevState => {
+      const planetsList = [...prevState.planetsList, ...res.results];
+      const highestPopulation = this.findHighestPopulation(planetsList);
+
+      return {
+        isLoading: false,
+        isLoadingMore: false,
+        planetsList,
+        highestPopulation,
+        fullPlanetsList: planetsList,
+        nextUrl: res.next
+      }
+    })
   }
 
   getUserInfo = () => {
@@ -160,6 +171,8 @@ export default class Home extends Component {
   render() {
     const { navigation } = this.props;
     const { planetsList, isLoading, query, highestPopulation, isLoadingMore } = this.state;
+
+    console.log(this.state.searchCount)
 
     return (
       <View style={style.container}>

@@ -55,11 +55,7 @@ export default class PlanetDetails extends Component {
             <Text>Gravity: {planet.gravity}</Text>
             <Text>Orbital Period: {planet.orbital_period}</Text>
             <Text>Population: {planet.population}</Text>
-            <View style={style.cardFooter}>
-              <Text style={style.footerItem}>{planet.population}</Text>
-              <Text style={style.footerItem}>{planet.diameter}</Text>
-              <Text style={style.footerItem}>{planet.orbital_period}</Text>
-            </View>
+            <Text>Diameter: {planet.diameter}</Text>
           </View>
         )}
       </View>
